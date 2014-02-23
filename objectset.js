@@ -18,23 +18,25 @@ function objectSet(initialData) {
 
 (function() {
     // establish who we inherit from
-    objectSet.prototype = new set();
+    var proto = objectSet.prototype = new set();
+    
     // put constructor back to us
-    objectSet.prototype.constructor = objectSet;
+    proto.constructor = objectSet;
     
     // override of _getKey to make sure we get the right string key
     // for an object
-    objectSet.prototype._getKey = function(obj) {
+    proto._getKey = function(obj) {
         var key;
         if (typeof obj === "string") {
             return obj;
-        }
-        else if (typeof obj === "object") {
+        } else if (typeof obj === "object") {
             if (obj._objectSetKey) {
                 key = obj._objectSetKey;
             } else if (obj.toKey && typeof obj.toKey === "function") {
                 key = obj.toKey();
             } else {
+                // explicitly don't allow the object type to use .toString() because
+                // the default implementation for an object doesn't work
                 return null;
             }
         }
@@ -51,7 +53,7 @@ function objectSet(initialData) {
     // calls _getKey to see if there is already a key
     // if there isn't already a key and this is an object, then we define a unique key for the object
     // and assign it to the object so it will not change
-    objectSet.prototype._makeKey = function(obj) {
+    proto._makeKey = function(obj) {
         var key = this._getKey(obj);
         if (!key && typeof obj === "object") {
             // coin a new key and set it on the object
@@ -75,7 +77,7 @@ function objectSet(initialData) {
     
     // override to support a nodeList object and let baseclass treat it like an array
     // to add all the objects in it to the set
-    objectSet.prototype._isPseudoArray = function(item) {
+    proto._isPseudoArray = function(item) {
         // modern browser such as IE9 / firefox / chrome etc.
         var result = Object.prototype.toString.call(item);
         if (result === "[object HTMLCollection]" || result === "[object NodeList]") {

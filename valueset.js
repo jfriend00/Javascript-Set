@@ -31,62 +31,65 @@ function valueSet(initialData) {
     set.apply(this, arguments);
 }
 
-// inherit from set
-valueSet.prototype = new set();
-// set constructor back to us
-valueSet.prototype.constructor = valueSet;
+(function() {
+    // inherit from set
+    var proto = valueSet.prototype = new set();
+    var base = set.prototype;
+    // set constructor back to us
+    proto.constructor = valueSet;
 
-// override of the base class .add()
-// add(key, value)
-// add(valueSet)
-// add({key1: value1, key2: value2})
-valueSet.prototype.add = function(arg1, arg2) {
-    if (arg1 instanceof set) {
-        // call base class to just add another set
-        set.prototype.add.call(this, arg1);
-    } else if (typeof arg1 === "object") {
-        // cycle through the object and add all properties/values to the set
-        for (var prop in arg1) {
-            if (arg1.hasOwnProperty(prop)) {
-                this._add(prop, arg1[prop]);
+    // override of the base class .add()
+    // add(key, value)
+    // add(valueSet)
+    // add({key1: value1, key2: value2})
+    proto.add = function(arg1, arg2) {
+        if (arg1 instanceof set) {
+            // call base class to just add another set
+            base.add.call(this, arg1);
+        } else if (typeof arg1 === "object") {
+            // cycle through the object and add all properties/values to the set
+            for (var prop in arg1) {
+                if (arg1.hasOwnProperty(prop)) {
+                    this._add(prop, arg1[prop]);
+                }
             }
+        } else if (typeof arg2 !== "undefined") {
+            // must be add(key, value)
+            this._add(arg1, arg2);
         }
-    } else if (typeof arg2 !== "undefined") {
-        // must be add(key, value)
-        this._add(arg1, arg2);
+        return this;
     }
-    return this;
-}
 
-valueSet.prototype.get = function(key) {
-    return this.data[key];
-}
+    proto.get = function(key) {
+        return this.data[key];
+    }
 
-// override that collects just the string keys, not the values
-valueSet.prototype.keys = function() {
-    var results = [];
-    this.each(function(data, key) {
-        results.push(key);
-    });
-    return results;
-}
+    // override that collects just the string keys, not the values
+    proto.keys = function() {
+        var results = [];
+        this.each(function(data, key) {
+            results.push(key);
+        });
+        return results;
+    }
 
-// return an array of all the values
-valueSet.prototype.values = function() {
-    var results = [];
-    this.each(function(data, key) {
-        results.push(data);
-    });
-    return results;
-}
+    // return an array of all the values
+    proto.values = function() {
+        var results = [];
+        this.each(function(data, key) {
+            results.push(data);
+        });
+        return results;
+    }
 
-valueSet.prototype.find = function(value) {
-    var found = null;
-    this.each(function(val, key) {
-        if (val === value) {
-            found = key;
-            return false;       // stop .each() loop
-        }
-    });
-    return found;
-}
+    proto.find = function(value) {
+        var found = null;
+        this.each(function(val, key) {
+            if (val === value) {
+                found = key;
+                return false;       // stop .each() loop
+            }
+        });
+        return found;
+    }
+})();
