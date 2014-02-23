@@ -106,6 +106,12 @@ function runSetTests(elem) {
         var x = new set();
         x.add(1).add(2,3,4).add([5,6,7],8).add(new set(9));
         verify(".add()", x, [1,2,3,4,5,6,7,8,9]);
+        // try some tough properties with potentially conflicting names
+        x.add("hasOwnProperty", "constructor");
+        verify(".has('hasOwnProperty')", x.has("hasOwnProperty"), true);
+        verify(".has('constructor')", x.has("constructor"), true);
+        x.remove("hasOwnProperty", "constructor");
+        verify(".remove()", x, [1,2,3,4,5,6,7,8,9]);
         
         // test .remove()
         x.remove(2).remove([3,4]).remove(5,6);
