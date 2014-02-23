@@ -209,8 +209,10 @@ function runSetTests(elem) {
         verify("objectSet .has() #6", x.has(list[9]), true);
         verify("objectSet constructor", x.keys().length, 10);
         x.remove(list[0], list[1]);
-        verify("objectSet .remove()", x.keys().length, 8);
-        
+        verify("objectSet .remove() #1", x.keys().length, 8);
+        var keys = x.keys();
+        x.remove(keys[0], keys[1]);
+        verify("objectSet .remove() #2", x.keys().length, 6);
         
         
 
