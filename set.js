@@ -52,11 +52,9 @@ function set(initialData) {
     // new set(otherSet)
     // new set(otherSet1, otherSet2, ...)
     this.data = {};
-    if (arguments.length > 0) {
-        // call .add() on each argument
-        for (var i = 0; i < arguments.length; i++) {
-            this.add(arguments[i]);
-        }
+    // call .add() on each argument
+    for (var i = 0; i < arguments.length; i++) {
+        this.add(arguments[i]);
     }
 }
 
