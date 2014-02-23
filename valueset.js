@@ -7,25 +7,33 @@
 // returns a unique value.
 //
 // This has the exact same API as the set object except for:
-// 1) add has been changed to accept the value
-//    add(key, value)
-//    add(valueSet)
-//    add({key1: value1, key2: value2})
+// 1) .add has been changed to accept the value
+//    .add(key, value)
+//    .add(valueSet)
+//    .add({key1: value1, key2: value2})
 //
-// 2) get() is a new method that retrieves the value associated with a key
+// 2) .get(key) is a new method that retrieves the value associated with a key
 //
-// 3) keys() returns the string converted version of the keys, not the original
+// 3) .keys() returns the string converted version of the keys, not the original
+//        you could then get each corresponding value by calling .get(key)
 //
-// 4) find() does a brute force search for a particular value and 
+// 4) .find() does a brute force search for a particular value and 
 //    returns the key of the first matching value or null
 //    Comparisons are done with === (so no type conversion)
+//
+// 5) .values() returns an array of all the values
+//
+// 6) .each(fn)
+//        the callback is passed fn(value, key)
 //---------------------------------------------------------------------------------------
 function valueSet(initialData) {
     // call parent constructor
     set.apply(this, arguments);
 }
 
+// inherit from set
 valueSet.prototype = new set();
+// set constructor back to us
 valueSet.prototype.constructor = valueSet;
 
 // override of the base class .add()
@@ -34,17 +42,18 @@ valueSet.prototype.constructor = valueSet;
 // add({key1: value1, key2: value2})
 valueSet.prototype.add = function(arg1, arg2) {
     if (arg1 instanceof set) {
+        // call base class to just add another set
         set.prototype.add.call(this, arg1);
     } else if (typeof arg1 === "object") {
         // cycle through the object and add all properties/values to the set
         for (var prop in arg1) {
             if (arg1.hasOwnProperty(prop)) {
-                set.prototype._add.call(this, prop, arg1[prop]);
+                this._add(prop, arg1[prop]);
             }
         }
-    } else {
+    } else if (typeof arg2 !== "undefined") {
         // must be add(key, value)
-        set.prototype._add.call(this, arg1, arg2);
+        this._add(arg1, arg2);
     }
     return this;
 }
@@ -58,6 +67,15 @@ valueSet.prototype.keys = function() {
     var results = [];
     this.each(function(data, key) {
         results.push(key);
+    });
+    return results;
+}
+
+// return an array of all the values
+valueSet.prototype.values = function() {
+    var results = [];
+    this.each(function(data, key) {
+        results.push(data);
     });
     return results;
 }

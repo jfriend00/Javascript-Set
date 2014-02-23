@@ -10,9 +10,6 @@
 //    the object.
 // 
 // Uses a javascript object to hold the set
-//    Allows you to (optionally) also
-//    specify a value to be stored with
-//    each key and retrieved later.
 //
 // s.add(key)                      // adds a key to the set (if it doesn't already exist)
 // s.add(key1, key2, key3)         // adds multiple keys
@@ -97,17 +94,16 @@ set.prototype = {
             // store the val (before being converted to a string key)
             val = key;
         }
-        key = this._makeKey(key);
-        if (!this.has(key)) {
-            this.data[key] = val;
-        }
+        this.data[this._makeKey(key)] = val;
         return this;
     },
-    // private: to turn the key into a string
+    // private: fetch current key
     // overridden by subclasses for custom key handling
     _getKey: function(arg) {
         return arg;
     },
+    // private: fetch current key or coin a new one if there isn't already one
+    // overridden by subclasses for custom key handling
     _makeKey: function(arg) {
         return arg;
     },
@@ -210,7 +206,7 @@ set.prototype = {
         // add to the result items in t, but not in s
         return newSet.add(otherSet.difference(this));
     },
-    // s.issubset(t)
+    // s.isSubset(t)
     // returns boolean whether every element of s is in t
     isSubset: function(otherSet) {
         return this.eachReturn(function(data, key) {
@@ -219,7 +215,7 @@ set.prototype = {
             }
         });
     },
-    // s.issuperset(t)
+    // s.isSuperset(t)
     // returns boolean whether every element of t is in s
     isSuperset: function(otherSet) {
         var self = this;

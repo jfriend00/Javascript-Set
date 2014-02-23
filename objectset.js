@@ -4,11 +4,11 @@
 // This is an object with the same function as a set(), but
 //   it accepts objects as set keys and will work with JS objects or DOM objects
 // There are three ways the key will be obtained:
-//    1) If the .objectSetKey property already exists on the object, that will be used
+//    1) If the ._objectSetKey property already exists on the object, that will be used
 //    2) If the `.toKey()` method exists on the object, that will be called and
 //       its return value will be used as the key.  Note, this method must always
 //       return the same string for the same object
-//    3) If neither of the above is true, then the .objectSetCntr property will be
+//    3) If neither of the above is true, then the ._objectSetKey property will be
 //       assigned with a unique id value in it
 //---------------------------------------------------------------------------------------
 function objectSet(initialData) {
@@ -30,8 +30,8 @@ function objectSet(initialData) {
             return obj;
         }
         else if (typeof obj === "object") {
-            if (obj.objectSetKey) {
-                key = obj.objectSetKey;
+            if (obj._objectSetKey) {
+                key = obj._objectSetKey;
             } else if (obj.toKey && typeof obj.toKey === "function") {
                 key = obj.toKey();
             } else {
@@ -48,13 +48,16 @@ function objectSet(initialData) {
     // monotomically increasing cntr for assigning unique object IDs
     var objectSetCntr = 1;
     
+    // calls _getKey to see if there is already a key
+    // if there isn't already a key and this is an object, then we define a unique key for the object
+    // and assign it to the object so it will not change
     objectSet.prototype._makeKey = function(obj) {
         var key = this._getKey(obj);
         if (!key && typeof obj === "object") {
             // coin a new key and set it on the object
-            key = objectSetCntr.toString();
+            key = "_uniqueObjId_" + objectSetCntr.toString();
             if (Object.prototype.toString.call(obj) === "[object Object]" && Object.defineProperty) {
-                Object.defineProperty(obj, "objectSetKey", {
+                Object.defineProperty(obj, "_objectSetKey", {
                     enumerable: false,
                     configurable: false,
                     writable: false,
@@ -62,7 +65,7 @@ function objectSet(initialData) {
                 });
             } else {
                 // no Object.defineProperty or can't use it so just make it an ordinary property
-                obj.objectSetKey = key;
+                obj._objectSetKey = key;
             }
             // increment cntr
             ++objectSetCntr;
