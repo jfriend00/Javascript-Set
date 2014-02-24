@@ -62,6 +62,7 @@ set.prototype = {
     // add([key1, key2, key3])
     // add(otherSet)
     // add(key1, [key2, key3, key4], otherSet)
+    // add supports the EXACT same arguments as the constructor
     add: function() {
         var key;
         for (var i = 0; i < arguments.length; i++) {

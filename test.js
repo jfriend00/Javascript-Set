@@ -9,7 +9,7 @@ function runSetTests(elem) {
             item = arguments[i];
             if (typeof item === "string") {
                 str += item;
-            } else if (item instanceof set) {
+            } else if (item instanceof set || item instanceof miniSet) {
                 str += JSON.stringify(item.keys());
             } else {
                 str += JSON.stringify(item);
@@ -39,14 +39,14 @@ function runSetTests(elem) {
         // _verify(set, array of keys)
         // _verify(array, array)
         // _verify(value, value) - string, number, boolean
-        if (s instanceof set || Array.isArray(s)) {
+        if (s instanceof set || s instanceof miniSet || Array.isArray(s)) {
             // if s is a set, then get its keys
             // if s is not a set, we assume it to be an array and we just compare s and t as arrays
             var keys;
-            if (s instanceof set) {
-                keys = s.keys();
-            } else {
+            if (Array.isArray(s)) {
                 keys = s;
+            } else {
+                keys = s.keys();
             }
             
             // verify that s contains exactly the keys in the array t
@@ -102,6 +102,37 @@ function runSetTests(elem) {
     
     // capture all errors so we can show them in the results
     try {
+        // test all forms of .add()
+        output("Testing miniSet...");
+        var x = new miniSet();
+        x.add(1).add(2,3,4).add([5,6,7],8).add(new miniSet(9));
+        verify(".add()", x, [1,2,3,4,5,6,7,8,9]);
+        // try some tough properties with potentially conflicting names
+        x.add("hasOwnProperty", "constructor");
+        verify(".has('hasOwnProperty')", x.has("hasOwnProperty"), true);
+        verify(".has('constructor')", x.has("constructor"), true);
+        x.remove("hasOwnProperty", "constructor");
+        verify(".remove()", x, [1,2,3,4,5,6,7,8,9]);
+        
+        // test .remove()
+        x.remove(2).remove([3,4]).remove(5,6);
+        verify(".remove()", x, [1,7,8,9]);
+        
+        // test .has()
+        verify(".has(9)", x.has(9), true);
+        verify(".has(2)", x.has(2), false);
+        
+        // test .isEmpty()
+        verify(".isEmpty() #1", x.isEmpty(), false);
+        var y = new set().add(1).remove(1);
+        verify(".isEmpty() #2", y.isEmpty(), true);
+
+        // test .clear()
+        y.add([1,2,3]);
+        y.clear();
+        verify(".clear()", y.isEmpty(), true);
+    
+        output("Testing set...");
         // test all forms of .add()
         var x = new set();
         x.add(1).add(2,3,4).add([5,6,7],8).add(new set(9));
@@ -167,6 +198,7 @@ function runSetTests(elem) {
         verify(".isSuperset() #3", z.isSuperset(y), true);
         
         // test valueSet
+        output("Testing valueSet...");
         x = new valueSet({a:1, b:2,c:3});
         y = new valueSet({d:4});
         x.add(y).add({e:5}).add("f", 6).remove("a");
@@ -177,6 +209,7 @@ function runSetTests(elem) {
         verify("valueSet .find() #2", x.find(1), null);
         
         // test objectSet with DOM objects
+        output("Testing objectSet...");
         var div = document.createElement("div");
         div.innerHTML = "<ul><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li></ul>";
         div.id = "testObjectSet";
