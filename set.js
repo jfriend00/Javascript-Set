@@ -1,3 +1,4 @@
+"use strict"
 //-------------------------------------------
 // Implementation of a set in javascript
 //

@@ -1,4 +1,4 @@
-
+"use strict"
 function runSetTests(elem) {
 
     var indentLevel = 0;
@@ -199,7 +199,7 @@ function runSetTests(elem) {
         // test objectSet with JS objects that have a toKey() method
         // define an object with .toKey() method
         var testObjCntr = 1;
-        function testObj() {
+        var testObj = function() {
             this.toKey = function() {
                 return this.id + "";
             }
@@ -219,12 +219,6 @@ function runSetTests(elem) {
         var keys = x.keys();
         x.remove(keys[0], keys[1]);
         verify("objectSet .remove() #2", x.keys().length, 6);
-        
-        
-
-        
-        
-        
         
     } catch(e) {
         output("Error: ", e.message);
