@@ -164,10 +164,20 @@ set.prototype = {
         this.data = {}; 
         return this;
     },
+    // makes a new set of the same type and configuration as this one
+    // regardless of what derived type of object we actually are
+    // accepts same arguments as a constructor for initially populating the set
+    makeNew: function() {
+        var newSet = new this.constructor();
+        if (arguments.length) {
+            newSet.add.apply(newSet, arguments);
+        }
+        return newSet;
+    },
     // s.union(t)
     // returns a new set that is the union of two sets
     union: function(otherSet) {
-        var newSet = new this.constructor(this);
+        var newSet = this.makeNew(this);
         newSet.add(otherSet);
         return newSet;
     },
@@ -175,7 +185,7 @@ set.prototype = {
     // returns a new set that contains the keys that are
     // in both sets
     intersection: function(otherSet) {
-        var newSet = new this.constructor();
+        var newSet = this.makeNew();
         this.each(function(data, key) {
             if (otherSet.has(key)) {
                 newSet._add(key, data);
@@ -187,7 +197,7 @@ set.prototype = {
     // returns a new set that contains the keys that are
     // s but not in t
     difference: function(otherSet) {
-        var newSet = new this.constructor();
+        var newSet = this.makeNew();
         this.each(function(data, key) {
             if (!otherSet.has(key)) {
                 newSet._add(key, data);
@@ -249,7 +259,7 @@ set.prototype = {
     // myCallback(key) - returns true to include in returned set
     // returns new set
     filter: function(fn) {
-        var newSet = new this.constructor();
+        var newSet = this.makeNew();
         this.each(function(data, key) {
             if (fn.call(this, key) === true) {
                 newSet._add(key, data);
@@ -263,7 +273,7 @@ set.prototype = {
     //   then nothing is added to the returned set
     // returns new set
     map: function(fn) {
-        var newSet = new this.constructor();
+        var newSet = this.makeNew();
         this.each(function(data, key) {
             var ret = fn.call(this, key);
             if (typeof ret !== "undefined") {
