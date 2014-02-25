@@ -1,6 +1,6 @@
 "use strict";
 //-------------------------------------------
-// Simple implementation of a set in javascript
+// Simple implementation of a Set in javascript
 //
 // Supports any element type that can uniquely be identified
 //    with its string conversion (e.g. toString() operator).
@@ -10,29 +10,29 @@
 //    on an object that would uniquely identify
 //    the object.
 // 
-// Uses a javascript object to hold the set
+// Uses a javascript object to hold the Set
 //
-// This is a subset of the set object designed to be smaller and faster, but
-// not as extensible.  This implementation should not be mixed with the set object
-// as in don't pass a miniSet to a set constructor or vice versa.  Both can exist and be
+// This is a subset of the Set object designed to be smaller and faster, but
+// not as extensible.  This implementation should not be mixed with the Set object
+// as in don't pass a miniSet to a Set constructor or vice versa.  Both can exist and be
 // used separately in the same project, though if you want the features of the other
 // sets, then you should probably just include them and not include miniSet as it's
 // really designed for someone who just wants the smallest amount of code to get
-// a set interface.
+// a Set interface.
 //
-// s.add(key)                      // adds a key to the set (if it doesn't already exist)
+// s.add(key)                      // adds a key to the Set (if it doesn't already exist)
 // s.add(key1, key2, key3)         // adds multiple keys
 // s.add([key1, key2, key3])       // adds multiple keys
-// s.add(otherSet)                 // adds another set to this set
+// s.add(otherSet)                 // adds another Set to this Set
 // s.add(arrayLikeObject)          // adds anything that a subclass returns true on _isPseudoArray()
-// s.remove(key)                   // removes a key from the set
+// s.remove(key)                   // removes a key from the Set
 // s.remove(["a", "b"]);           // removes all keys in the passed in array
 // s.remove("a", "b", ["first", "second"]);   // removes all keys specified
-// s.has(key)                      // returns true/false if key exists in the set
-// s.isEmpty()                     // returns true/false for whether set is empty
-// s.keys()                        // returns an array of keys in the set
-// s.clear()                       // clears all data from the set
-// s.each(fn)                      // iterate over all items in the set (return this for method chaining)
+// s.has(key)                      // returns true/false if key exists in the Set
+// s.isEmpty()                     // returns true/false for whether Set is empty
+// s.keys()                        // returns an array of keys in the Set
+// s.clear()                       // clears all data from the Set
+// s.each(fn)                      // iterate over all items in the Set (return this for method chaining)
 //
 // All methods return the object for use in chaining except when the point
 // of the method is to return a specific value (such as .keys() or .isEmpty())
@@ -41,23 +41,23 @@
 
 // polyfill for Array.isArray
 if(!Array.isArray) {
-  Array.isArray = function (vArg) {
-    return Object.prototype.toString.call(vArg) === "[object Array]";
-  };
+    Array.isArray = function (vArg) {
+        return Object.prototype.toString.call(vArg) === "[object Array]";
+    };
 }
 
-function miniSet(initialData) {
+function MiniSet(initialData) {
     // Usage:
-    // new set()
-    // new set(1,2,3,4,5)
-    // new set(["1", "2", "3", "4", "5"])
-    // new set(otherSet)
-    // new set(otherSet1, otherSet2, ...)
+    // new MiniSet()
+    // new MiniSet(1,2,3,4,5)
+    // new MiniSet(["1", "2", "3", "4", "5"])
+    // new MiniSet(otherSet)
+    // new MiniSet(otherSet1, otherSet2, ...)
     this.data = {};
     this.add.apply(this, arguments);
 }
 
-miniSet.prototype = {
+MiniSet.prototype = {
     // usage:
     // add(key)
     // add([key1, key2, key3])
@@ -72,7 +72,7 @@ miniSet.prototype = {
                 for (var j = 0; j < key.length; j++) {
                     this.data[key[j]] = key[j];
                 }
-            } else if (key instanceof miniSet) {
+            } else if (key instanceof MiniSet) {
                 var self = this;
                 key.each(function(val, key) {
                     self.data[key] = val;
@@ -114,7 +114,7 @@ miniSet.prototype = {
     has: function(key) {
         return Object.prototype.hasOwnProperty.call(this.data, key);
     },
-    // tells you if the set is empty or not
+    // tells you if the Set is empty or not
     isEmpty: function() {
         for (var key in this.data) {
             if (this.has(key)) {
@@ -123,7 +123,7 @@ miniSet.prototype = {
         }
         return true;
     },
-    // returns an array of all keys in the set
+    // returns an array of all keys in the Set
     // returns the original key (not the string converted form)
     keys: function() {
         var results = [];
@@ -132,15 +132,15 @@ miniSet.prototype = {
         });
         return results;
     },
-    // clears the set
+    // clears the Set
     clear: function() {
         this.data = {}; 
         return this;
     },
-    // iterate over all elements in the set until callback returns false
+    // iterate over all elements in the Set until callback returns false
     // myCallback(key) is the callback form
     // If the callback returns false, then the iteration is stopped
-    // returns the set to allow method chaining
+    // returns the Set to allow method chaining
     each: function(fn) {
         this.eachReturn(fn);
         return this;
@@ -161,4 +161,4 @@ miniSet.prototype = {
     }
 };
 
-miniSet.prototype.constructor = miniSet;
+MiniSet.prototype.constructor = MiniSet;

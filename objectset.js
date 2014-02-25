@@ -1,9 +1,9 @@
-"use strict"
+"use strict";
 //---------------------------------------------------------------------------------------
 // objectSet
 // 
-// This is an object with the same function as a set(), but
-//   it accepts objects as set keys and will work with JS objects or DOM objects
+// This is an object with the same function as a Set(), but
+//   it accepts objects as Set keys and will work with JS objects or DOM objects
 // There are three ways the key will be obtained:
 //    1) If the ._objectSetKey property already exists on the object, that will be used
 //    2) If the `.toKey()` method exists on the object, that will be called and
@@ -47,12 +47,12 @@ function objectSet(config, initialData) {
     }
     // call parent constructor with all arguments
     // except config object
-    set.apply(this, args);
+    Set.apply(this, args);
 }
 
 (function() {
     // establish who we inherit from
-    var proto = objectSet.prototype = new set();
+    var proto = objectSet.prototype = new Set();
     
     // put constructor back to us
     proto.constructor = objectSet;
@@ -98,7 +98,7 @@ function objectSet(config, initialData) {
         var keyProp;
         if (!key && typeof obj === "object") {
             keyProp = this.config.keyStoragePropertyName;
-            // coin a new key and set it on the object
+            // coin a new key and Set it on the object
             key = "_uniqueObjId_" + objectSetCntr.toString();
             // only use Object.defineProperty on actual JS objects, not on DOM objects
             if (Object.prototype.toString.call(obj) === "[object Object]" && Object.defineProperty) {
@@ -119,7 +119,7 @@ function objectSet(config, initialData) {
     }
     
     // override to support a nodeList object and let baseclass treat it like an array
-    // to add all the objects in it to the set
+    // to add all the objects in it to the Set
     proto._isPseudoArray = function(item) {
         // modern browser such as IE9 / firefox / chrome etc.
         var result = Object.prototype.toString.call(item);
@@ -132,7 +132,7 @@ function objectSet(config, initialData) {
         }
         // if possible empty nodeList, we want to treat it as a nodeList
         // it will be empty so it won't actually add anything, but then
-        // we don't get an empty nodeList object itself in the set
+        // we don't get an empty nodeList object itself in the Set
         if (item.length === 0) {
             return true;
         } else if (item[0] && item[0].nodeType) {
@@ -141,7 +141,7 @@ function objectSet(config, initialData) {
         return false;        
     }
     
-    // makes a new empty set of the same type and configuration as this one
+    // makes a new empty Set of the same type and configuration as this one
     // override of base class to add support for config
     proto.makeNew = function() {
         var newSet = new this.constructor(this.config);

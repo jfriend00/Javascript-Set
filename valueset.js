@@ -1,13 +1,13 @@
-"use strict"
+"use strict";
 //---------------------------------------------------------------------------------------
 // valueSet
 // 
-// This is an object with the same function as a set(), but
-//   it stores a value with each item in the set (kind of like a dictionary)
+// This is an object with the same function as a Set(), but
+//   it stores a value with each item in the Set (kind of like a dictionary)
 // This works only with items that either are strings or have a .toString() method that
 // returns a unique value.
 //
-// This has the exact same API as the set object except for:
+// This has the exact same API as the Set object except for:
 // 1) .add has been changed to accept the value
 //    .add(key, value)
 //    .add(valueSet)
@@ -29,14 +29,14 @@
 //---------------------------------------------------------------------------------------
 function valueSet(initialData) {
     // call parent constructor
-    set.apply(this, arguments);
+    Set.apply(this, arguments);
 }
 
 (function() {
-    // inherit from set
-    var proto = valueSet.prototype = new set();
-    var base = set.prototype;
-    // set constructor back to us
+    // inherit from Set
+    var proto = valueSet.prototype = new Set();
+    var base = Set.prototype;
+    // Set constructor back to us
     proto.constructor = valueSet;
 
     // override of the base class .add()
@@ -44,11 +44,11 @@ function valueSet(initialData) {
     // add(valueSet)
     // add({key1: value1, key2: value2})
     proto.add = function(arg1, arg2) {
-        if (arg1 instanceof set) {
-            // call base class to just add another set
+        if (arg1 instanceof Set) {
+            // call base class to just add another Set
             base.add.call(this, arg1);
         } else if (typeof arg1 === "object") {
-            // cycle through the object and add all properties/values to the set
+            // cycle through the object and add all properties/values to the Set
             for (var prop in arg1) {
                 if (arg1.hasOwnProperty(prop)) {
                     this._add(prop, arg1[prop]);

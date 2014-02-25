@@ -9,7 +9,7 @@ function runSetTests(elem) {
             item = arguments[i];
             if (typeof item === "string") {
                 str += item;
-            } else if (item instanceof set || item instanceof miniSet) {
+            } else if (item instanceof Set || item instanceof MiniSet) {
                 str += JSON.stringify(item.keys());
             } else {
                 str += JSON.stringify(item);
@@ -36,12 +36,12 @@ function runSetTests(elem) {
     
     function _verify(s, t) {
         // forms of input here
-        // _verify(set, array of keys)
+        // _verify(Set, array of keys)
         // _verify(array, array)
         // _verify(value, value) - string, number, boolean
-        if (s instanceof set || s instanceof miniSet || Array.isArray(s)) {
-            // if s is a set, then get its keys
-            // if s is not a set, we assume it to be an array and we just compare s and t as arrays
+        if (s instanceof Set || s instanceof MiniSet || Array.isArray(s)) {
+            // if s is a Set, then get its keys
+            // if s is not a Set, we assume it to be an array and we just compare s and t as arrays
             var keys;
             if (Array.isArray(s)) {
                 keys = s;
@@ -50,7 +50,7 @@ function runSetTests(elem) {
             }
             
             // verify that s contains exactly the keys in the array t
-            // we could use set features more easily to test this, but
+            // we could use Set features more easily to test this, but
             // we don't want to use sets themselves to test sets, so
             // we go brute force here
             var missing = [];
@@ -69,13 +69,13 @@ function runSetTests(elem) {
                 }
             }
             if (keys.length !== t.length) {
-                errors.push("set length is not what was expected: " + keys.length + " !== " + t.length);
+                errors.push("Set length is not what was expected: " + keys.length + " !== " + t.length);
             }
             if (extra.length) {
-                errors.push("set contains extra keys: " + JSON.stringify(extra));
+                errors.push("Set contains extra keys: " + JSON.stringify(extra));
             }
             if (missing.length) {
-                errors.push("set is missing keys: " + JSON.stringify(missing));
+                errors.push("Set is missing keys: " + JSON.stringify(missing));
             }
             if (errors.length) {
                 return errors;
@@ -103,9 +103,9 @@ function runSetTests(elem) {
     // capture all errors so we can show them in the results
     try {
         // test all forms of .add()
-        output("Testing miniSet...");
-        var x = new miniSet();
-        x.add(1).add(2,3,4).add([5,6,7],8).add(new miniSet(9));
+        output("Testing MiniSet...");
+        var x = new MiniSet();
+        x.add(1).add(2,3,4).add([5,6,7],8).add(new MiniSet(9));
         verify(".add()", x, [1,2,3,4,5,6,7,8,9]);
         // try some tough properties with potentially conflicting names
         x.add("hasOwnProperty", "constructor");
@@ -124,7 +124,7 @@ function runSetTests(elem) {
         
         // test .isEmpty()
         verify(".isEmpty() #1", x.isEmpty(), false);
-        var y = new set().add(1).remove(1);
+        var y = new Set().add(1).remove(1);
         verify(".isEmpty() #2", y.isEmpty(), true);
 
         // test .clear()
@@ -132,10 +132,10 @@ function runSetTests(elem) {
         y.clear();
         verify(".clear()", y.isEmpty(), true);
     
-        output("Testing set...");
+        output("Testing Set...");
         // test all forms of .add()
-        var x = new set();
-        x.add(1).add(2,3,4).add([5,6,7],8).add(new set(9));
+        var x = new Set();
+        x.add(1).add(2,3,4).add([5,6,7],8).add(new Set(9));
         verify(".add()", x, [1,2,3,4,5,6,7,8,9]);
         // try some tough properties with potentially conflicting names
         x.add("hasOwnProperty", "constructor");
@@ -154,7 +154,7 @@ function runSetTests(elem) {
         
         // test .isEmpty()
         verify(".isEmpty() #1", x.isEmpty(), false);
-        var y = new set().add(1).remove(1);
+        var y = new Set().add(1).remove(1);
         verify(".isEmpty() #2", y.isEmpty(), true);
 
         // test .clear()
@@ -163,8 +163,8 @@ function runSetTests(elem) {
         verify(".clear()", y.isEmpty(), true);
         
         // test .union()
-        x = new set([1,2,3,4,5]);
-        y = new set([5,6,7,8,9]);
+        x = new Set([1,2,3,4,5]);
+        y = new Set([5,6,7,8,9]);
         var z = x.union(y);
         verify(".union()", z, [1,2,3,4,5,6,7,8,9]);
         
@@ -173,10 +173,10 @@ function runSetTests(elem) {
         verify(".hasAll() #2", z.hasAll([1,2,3,4,5,6,7,8,9,10]), false);
         verify(".hasAll() #3", z.hasAll([]), true);
         
-        verify(".equals() #1", z.equals(new set([1,2,3,4,5,6,7,8,9])), true);
-        verify(".equals() #2", z.equals(new set([1,2,3,4,5,6,7,8])), false);
-        verify(".equals() #3", z.equals(new set([1,2,3,4,5,6,7,8,9,10])), false);
-        verify(".equals() #4", z.equals(new set()), false);
+        verify(".equals() #1", z.equals(new Set([1,2,3,4,5,6,7,8,9])), true);
+        verify(".equals() #2", z.equals(new Set([1,2,3,4,5,6,7,8])), false);
+        verify(".equals() #3", z.equals(new Set([1,2,3,4,5,6,7,8,9,10])), false);
+        verify(".equals() #4", z.equals(new Set()), false);
         
         // test .intersection()
         z = x.intersection(y);
@@ -191,18 +191,18 @@ function runSetTests(elem) {
         verify(".notInBoth()", z, [1,2,3,4,6,7,8,9]);
         
         // test .isSubset() 
-        x = new set([1,2,3,4,5]);
-        y = new set([1,2,3]);
-        z = new set([1,2,3,4,5,6]);
+        x = new Set([1,2,3,4,5]);
+        y = new Set([1,2,3]);
+        z = new Set([1,2,3,4,5,6]);
         verify(".isSubset() #1", x.isSubset(y), false);
         verify(".isSubset() #2", x.isSubset(z), true);
-        z = new set();
+        z = new Set();
         verify(".isSubset() #3", z.isSubset(x), true);
         
         // test .isSuperset()
-        x = new set([1,2,3,4,5]);
-        y = new set([1,2,3]);
-        z = new set([1,2,3,4,5,6]);
+        x = new Set([1,2,3,4,5]);
+        y = new Set([1,2,3]);
+        z = new Set([1,2,3,4,5,6]);
         verify(".isSuperset() #1", x.isSuperset(y), true);
         verify(".isSuperset() #2", y.isSuperset(x), false);
         verify(".isSuperset() #3", z.isSuperset(y), true);
