@@ -1,6 +1,6 @@
 "use strict";
 //---------------------------------------------------------------------------------------
-// objectSet
+// ObjectSet
 // 
 // This is an object with the same function as a Set(), but
 //   it accepts objects as Set keys and will work with JS objects or DOM objects

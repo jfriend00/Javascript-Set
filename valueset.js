@@ -1,6 +1,6 @@
 "use strict";
 //---------------------------------------------------------------------------------------
-// valueSet
+// ValueSet
 // 
 // This is an object with the same function as a Set(), but
 //   it stores a value with each item in the Set (kind of like a dictionary)
@@ -10,7 +10,7 @@
 // This has the exact same API as the Set object except for:
 // 1) .add has been changed to accept the value
 //    .add(key, value)
-//    .add(valueSet)
+//    .add(ValueSet)
 //    .add({key1: value1, key2: value2})
 //
 // 2) .get(key) is a new method that retrieves the value associated with a key
@@ -27,21 +27,21 @@
 // 6) .each(fn)
 //        the callback is passed fn(value, key)
 //---------------------------------------------------------------------------------------
-function valueSet(initialData) {
+function ValueSet(initialData) {
     // call parent constructor
     Set.apply(this, arguments);
 }
 
 (function() {
     // inherit from Set
-    var proto = valueSet.prototype = new Set();
+    var proto = ValueSet.prototype = new Set();
     var base = Set.prototype;
     // Set constructor back to us
-    proto.constructor = valueSet;
+    proto.constructor = ValueSet;
 
     // override of the base class .add()
     // add(key, value)
-    // add(valueSet)
+    // add(ValueSet)
     // add({key1: value1, key2: value2})
     proto.add = function(arg1, arg2) {
         if (arg1 instanceof Set) {
