@@ -207,16 +207,16 @@ function runSetTests(elem) {
         verify(".isSuperset() #2", y.isSuperset(x), false);
         verify(".isSuperset() #3", z.isSuperset(y), true);
         
-        // test ValueSet
-        output("Testing ValueSet...");
-        x = new ValueSet({a:1, b:2,c:3});
-        y = new ValueSet({d:4});
+        // test Dictionary
+        output("Testing Dictionary...");
+        x = new Dictionary({a:1, b:2,c:3});
+        y = new Dictionary({d:4});
         x.add(y).add({e:5}).add("f", 6).remove("a");
-        verify("ValueSet constructor and .add()", x, ["b", "c", "d", "e", "f"]);
-        verify("ValueSet .values()", x.values(), [2,3,4,5,6]);
-        verify("ValueSet .get()", x.get("b"), 2);
-        verify("ValueSet .find() #1", x.find(3), "c");
-        verify("ValueSet .find() #2", x.find(1), null);
+        verify("Dictionary constructor and .add()", x, ["b", "c", "d", "e", "f"]);
+        verify("Dictionary .values()", x.values(), [2,3,4,5,6]);
+        verify("Dictionary .get()", x.get("b"), 2);
+        verify("Dictionary .find() #1", x.find(3), "c");
+        verify("Dictionary .find() #2", x.find(1), null);
         
         // test objectSet with DOM objects
         output("Testing objectSet...");
