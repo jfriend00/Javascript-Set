@@ -168,6 +168,16 @@ function runSetTests(elem) {
         var z = x.union(y);
         verify(".union()", z, [1,2,3,4,5,6,7,8,9]);
         
+        // test .hasAll()
+        verify(".hasAll() #1", z.hasAll([1,2,3,4,5,6,7,8,9]), true);
+        verify(".hasAll() #2", z.hasAll([1,2,3,4,5,6,7,8,9,10]), false);
+        verify(".hasAll() #3", z.hasAll([]), true);
+        
+        verify(".equals() #1", z.equals(new set([1,2,3,4,5,6,7,8,9])), true);
+        verify(".equals() #2", z.equals(new set([1,2,3,4,5,6,7,8])), false);
+        verify(".equals() #3", z.equals(new set([1,2,3,4,5,6,7,8,9,10])), false);
+        verify(".equals() #4", z.equals(new set()), false);
+        
         // test .intersection()
         z = x.intersection(y);
         verify(".intersection()",  z, [5]);

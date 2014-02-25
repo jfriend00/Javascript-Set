@@ -13,9 +13,12 @@
 // Uses a javascript object to hold the set
 //
 // This is a subset of the set object designed to be smaller and faster, but
-// not as extensible.  This implementation should not be mixed with the set object.
-// Either use the miniSet and none of the other set objects or use the full set 
-// object and don't use the miniSet.
+// not as extensible.  This implementation should not be mixed with the set object
+// as in don't pass a miniSet to a set constructor or vice versa.  Both can exist and be
+// used separately in the same project, though if you want the features of the other
+// sets, then you should probably just include them and not include miniSet as it's
+// really designed for someone who just wants the smallest amount of code to get
+// a set interface.
 //
 // s.add(key)                      // adds a key to the set (if it doesn't already exist)
 // s.add(key1, key2, key3)         // adds multiple keys

@@ -140,6 +140,20 @@ set.prototype = {
         key = this._makeKey(key);
         return Object.prototype.hasOwnProperty.call(this.data, key);
     },
+    // returns true/false for whether the current set contains all the passed in keys
+    // takes arguments just like the constructor or .add()
+    hasAll: function(args) {
+        var testSet = this.makeNew.apply(this, arguments);
+        var self = this;
+        return testSet.every(function(data, key) {
+            return self.has(key);
+        });
+    },
+    equals: function(otherSet) {
+        // this is not particularly efficient, but it's simple
+        // the only way you can be a subset and a superset it to be the same set
+        return this.isSubset(otherSet) && this.isSuperset(otherSet);
+    },
     // tells you if the set is empty or not
     isEmpty: function() {
         for (var key in this.data) {
