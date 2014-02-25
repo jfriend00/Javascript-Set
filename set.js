@@ -21,6 +21,8 @@
 // s.remove(["a", "b"]);           // removes all keys in the passed in array
 // s.remove("a", "b", ["first", "second"]);   // removes all keys specified
 // s.has(key)                      // returns true/false if key exists in the set
+// s.hasAll(args)                  // returns true if s has all the keys in args
+// s.equals(otherSet)              // returns true if s has exactly the same keys in it as otherSet
 // s.isEmpty()                     // returns true/false for whether set is empty
 // s.keys()                        // returns an array of keys in the set
 // s.clear()                       // clears all data from the set
