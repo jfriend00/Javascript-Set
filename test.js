@@ -181,9 +181,13 @@ function runSetTests(elem) {
         // test .intersection()
         z = x.intersection(y);
         verify(".intersection()",  z, [5]);
+		z = x.intersection([5,6,7,8,9]);
+        verify(".intersection()",  z, [5]);
         
         // test .difference()
         z = x.difference(y);
+        verify(".difference()", z, [1,2,3,4]);
+        z = x.difference([5,6,7,8,9]);
         verify(".difference()", z, [1,2,3,4]);
         
         // test .notInBoth()

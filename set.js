@@ -151,7 +151,17 @@ Set.prototype = {
             return self.has(key);
         });
     },
+	// if first arg is not a set, make it into one
+	// otherwise just return it
+	makeSet: function(args) {
+		if (!(args instanceof Set)) {
+			// pass all arguments here
+			return this.makeNew.apply(this, arguments);
+		}
+		return args;
+	},
     equals: function(otherSet) {
+		otherSet = this.makeSet(otherSet);
         // this is not particularly efficient, but it's simple
         // the only way you can be a subset and a superset it to be the same Set
         return this.isSubset(otherSet) && this.isSuperset(otherSet);
@@ -192,6 +202,7 @@ Set.prototype = {
     // s.union(t)
     // returns a new Set that is the union of two sets
     union: function(otherSet) {
+		otherSet = this.makeSet(otherSet);
         var newSet = this.makeNew(this);
         newSet.add(otherSet);
         return newSet;
@@ -200,6 +211,7 @@ Set.prototype = {
     // returns a new Set that contains the keys that are
     // in both sets
     intersection: function(otherSet) {
+		otherSet = this.makeSet(otherSet);
         var newSet = this.makeNew();
         this.each(function(data, key) {
             if (otherSet.has(key)) {
@@ -212,6 +224,7 @@ Set.prototype = {
     // returns a new Set that contains the keys that are
     // s but not in t
     difference: function(otherSet) {
+		otherSet = this.makeSet(otherSet);
         var newSet = this.makeNew();
         this.each(function(data, key) {
             if (!otherSet.has(key)) {
@@ -224,6 +237,7 @@ Set.prototype = {
     // returns a new Set that contains the keys that
     // are in either Set, but not both sets
     notInBoth: function(otherSet){
+		otherSet = this.makeSet(otherSet);
         // get items in s, but not in t
         var newSet = this.difference(otherSet);
         // add to the result items in t, but not in s
@@ -232,6 +246,7 @@ Set.prototype = {
     // s.isSubset(t)
     // returns boolean whether every element of s is in t
     isSubset: function(otherSet) {
+		otherSet = this.makeSet(otherSet);
         return this.eachReturn(function(data, key) {
             if (!otherSet.has(key)) {
                 return false; 
@@ -241,6 +256,7 @@ Set.prototype = {
     // s.isSuperset(t)
     // returns boolean whether every element of t is in s
     isSuperset: function(otherSet) {
+		otherSet = this.makeSet(otherSet);
         var self = this;
         return otherSet.eachReturn(function(data, key) {
             if (!self.has(key)) {
