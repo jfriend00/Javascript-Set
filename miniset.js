@@ -9,7 +9,7 @@
 //    one could implement a toString() operator
 //    on an object that would uniquely identify
 //    the object.
-// 
+//
 // Uses a javascript object to hold the Set
 //
 // This is a subset of the Set object designed to be smaller and faster, but
@@ -114,6 +114,10 @@ MiniSet.prototype = {
     has: function(key) {
         return Object.prototype.hasOwnProperty.call(this.data, key);
     },
+    // returns the size of the Set.
+    size: function() {
+      return Object.keys(this.data).length
+    },
     // tells you if the Set is empty or not
     isEmpty: function() {
         for (var key in this.data) {
@@ -134,7 +138,7 @@ MiniSet.prototype = {
     },
     // clears the Set
     clear: function() {
-        this.data = {}; 
+        this.data = {};
         return this;
     },
     // iterate over all elements in the Set until callback returns false
